@@ -1,0 +1,16 @@
+name = "polyai-zoom-app"
+compatibility_date = "2024-01-01"
+
+# Pages configuration
+pages_build_output_dir = "dist"
+
+# Environment variables (set these in Cloudflare dashboard)
+# POLYAI_API_KEY - Your PolyAI API key
+# POLYAI_ACCOUNT_ID - Your PolyAI account ID (e.g., "jupiter-usstaging")
+# POLYAI_BASE_URL - (Optional) Base URL for PolyAI API, defaults to staging
+
+[env.production]
+name = "polyai-zoom-app"
+
+[env.preview]
+name = "polyai-zoom-app-preview"
