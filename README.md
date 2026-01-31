@@ -346,6 +346,62 @@ polyai-zoom-app/
 ├── wrangler.toml
 └── README.md
 ```
+## Zoom Marketplace Submission
+
+If you plan to publish this app on the Zoom App Marketplace, here are key requirements and tips:
+
+### Required Assets
+
+**App Icon**
+- Size: 512x512 pixels
+- Format: PNG with transparent background
+- Should represent your brand or the app's purpose
+
+**Screenshots**
+- Provide 3-5 screenshots showing the app in action
+- Recommended size: 1280x800 pixels
+- Show key features: waiting state, data display, error handling
+
+**Privacy Policy**
+- Required for marketplace submission
+- Can be hosted on GitHub Pages, your website, or Cloudflare Pages
+- Template available at: https://www.privacypolicygenerator.info/
+
+### Submission Checklist
+
+- [ ] **Domain Verification**: Verify your Cloudflare Pages domain in Zoom Developer Console
+- [ ] **Scope Justification**: Explain why each scope is needed
+  - `getRunningContext`: "To determine when the app is active"
+  - `getPhoneContext`: "To access call information and caller details"
+  - `onPhoneContext`: "To receive real-time call status updates"
+- [ ] **App Description**: Keep under 200 words, focus on benefits
+- [ ] **Test Thoroughly**: Test with real PolyAI transfers before submitting
+- [ ] **Support Contact**: Provide valid support email/URL
+
+### Common Rejection Reasons
+
+1. **Missing Privacy Policy**: Must be publicly accessible URL
+2. **Insufficient Scope Justification**: Explain *why* you need each permission
+3. **Broken Links**: All URLs must be valid and accessible
+4. **Poor Screenshots**: Must show actual app functionality, not placeholders
+
+### Timeline
+
+- **Review Period**: 2-4 weeks
+- **Resubmission**: If rejected, address feedback and resubmit
+- **Updates**: Once approved, updates are typically faster (1-2 weeks)
+
+### Development vs Production
+
+**Local Test Mode**
+- Install directly in your Zoom account without marketplace approval
+- Perfect for testing and internal use
+- Accessible only to your organization
+
+**Marketplace Distribution**
+- Required for public availability
+- Zoom performs security and UX review
+- Accessible to all Zoom users
 
 ## Contributing
 
@@ -363,7 +419,37 @@ polyai-zoom-app/
 
 ## License
 
-[Your License Here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2026 CBA Solutions, LLC
+
+## Changelog
+
+### Version 1.0.0 (2026-01-31)
+
+**Initial Release**
+- React TypeScript application with modern architecture
+- Cloudflare Pages deployment with Functions backend
+- Zoom Phone SDK integration with automatic call detection
+- PolyAI API integration with retry logic and error handling
+- Configurable field mappings per project
+- Professional UI with collapsible sections
+- Development mode with mock data
+- Comprehensive documentation
+
+**Features**
+- Automatic project ID extraction from queue names
+- 3-attempt retry logic with 1-second delays
+- 10-second fetch timeout for reliability
+- Error boundary for graceful error handling
+- Mobile-responsive design
+- Raw JSON toggle for debugging
+
+**Security**
+- API keys handled server-side only
+- No sensitive data in client code
+- CORS-enabled Cloudflare Functions
+- Environment variable configuration
 
 ## Support
 
