@@ -124,10 +124,13 @@ npm run dev
 
 This starts Vite dev server on http://localhost:3000
 
+Uses example configurations with sanitized project IDs for local testing.
+
 **Note**: During local development, Cloudflare Functions won't work. You have two options:
 
 1. **Mock the API** (recommended for UI development):
-   - Temporarily modify `src/services/polyai.ts` to return mock data
+   - The app includes development mode with mock data
+   - Automatically activates when running outside Zoom
 
 2. **Use Wrangler dev**:
    ```bash
@@ -135,7 +138,45 @@ This starts Vite dev server on http://localhost:3000
    npx wrangler pages dev dist --local
    ```
 
-## Deployment to Cloudflare Pages
+## Deployment
+
+This project uses a two-configuration system to keep git clean while using real project IDs in production:
+
+- **`src/config/projects.ts`** - Example configurations with sanitized IDs (committed to git)
+- **`src/config/projects.prod.ts`** - Real project IDs (gitignored, not committed)
+
+### Production Deployment
+
+```bash
+npm run deploy:prod
+```
+
+This automatically:
+1. Swaps in your real project IDs from `projects.prod.ts`
+2. Builds the application
+3. Deploys to Cloudflare Pages
+4. Restores example configurations
+5. Keeps git clean with only sanitized examples
+
+**First time deploying?** Create `src/config/projects.prod.ts`:
+
+```bash
+# Copy template
+cp src/config/projects.ts src/config/projects.prod.ts
+
+# Edit with your REAL project IDs
+nano src/config/projects.prod.ts
+```
+
+Replace `EXAMPLE-PROJECT-123` with your actual PolyAI project IDs.
+
+> **Note:** The `.gitignore` file prevents `projects.prod.ts` from being committed, so your real project IDs stay private.
+
+For detailed setup instructions, see [PRODUCTION_CONFIG_SETUP.md](PRODUCTION_CONFIG_SETUP.md).
+
+## Manual Deployment (Alternative)
+
+If you prefer manual deployment without the config swap automation:
 
 ### Step 1: Build the Project
 
@@ -150,7 +191,7 @@ This creates a `dist/` folder with your compiled app.
 **Option A: Via Wrangler CLI (Recommended)**
 
 ```bash
-npx wrangler pages deploy dist --project-name=polyai-zoom-app
+npx wrangler pages deploy dist --project-name=polyai-zoom-app --branch=main
 ```
 
 **Option B: Via Cloudflare Dashboard**
@@ -178,7 +219,7 @@ POLYAI_BASE_URL=https://api.staging.us-1.platform.polyai.app
 
 **Variable Descriptions:**
 - `POLYAI_API_KEY`: Your PolyAI API authentication key
-- `POLYAI_ACCOUNT_ID`: Your PolyAI account identifier (e.g., "your-account-id")
+- `POLYAI_ACCOUNT_ID`: Your PolyAI account identifier
 - `POLYAI_BASE_URL`: (Optional) Base URL for PolyAI API. Defaults to staging if not set.
 
 ### Step 4: Get Your App URL
@@ -309,7 +350,7 @@ x-api-key: <your-api-key>
     "field2": "value2"
   },
   "id": null,
-  "shared_id": "7600958491751408535"
+  "shared_id": "1234567890123456789"
 }
 ```
 
@@ -321,16 +362,20 @@ polyai-zoom-app/
 │   └── api/
 │       └── poly/
 │           └── handoff_state.ts
+├── scripts/
+│   └── deploy-prod.js      # Production deployment script
 ├── src/
 │   ├── components/         # React components
 │   │   ├── DataView.tsx
+│   │   ├── ErrorBoundary.tsx
 │   │   ├── ErrorMessage.tsx
 │   │   ├── Field.tsx
 │   │   ├── FieldSection.tsx
 │   │   ├── LoadingSpinner.tsx
 │   │   └── RawDataToggle.tsx
 │   ├── config/
-│   │   └── projects.ts     # Field mappings
+│   │   ├── projects.ts     # Example field mappings (in git)
+│   │   └── projects.prod.ts # Real project IDs (gitignored)
 │   ├── hooks/
 │   │   └── useZoomPhoneContext.ts
 │   ├── services/
@@ -346,6 +391,7 @@ polyai-zoom-app/
 ├── wrangler.toml
 └── README.md
 ```
+
 ## Zoom Marketplace Submission
 
 If you plan to publish this app on the Zoom App Marketplace, here are key requirements and tips:
@@ -407,9 +453,9 @@ If you plan to publish this app on the Zoom App Marketplace, here are key requir
 
 ### Adding New Projects
 
-1. Edit `src/config/projects.ts`
+1. Edit `src/config/projects.prod.ts` (for production)
 2. Add your project ID and field mappings
-3. Rebuild and redeploy
+3. Deploy with `npm run deploy:prod`
 
 ### Customizing UI
 
@@ -425,29 +471,28 @@ Copyright (c) 2026 CBA Solutions, LLC
 
 ## Changelog
 
-### Version 1.0.0 (2026-01-31)
+### Version 1.0.1 (2026-01-31)
 
-**Initial Release**
-- React TypeScript application with modern architecture
-- Cloudflare Pages deployment with Functions backend
-- Zoom Phone SDK integration with automatic call detection
-- PolyAI API integration with retry logic and error handling
-- Configurable field mappings per project
-- Professional UI with collapsible sections
-- Development mode with mock data
-- Comprehensive documentation
+**Improvements:**
+- Added production deployment workflow with config swapping
+- Added ErrorBoundary component for graceful error handling
+- Added 10-second fetch timeout to prevent hanging requests
+- Fixed footer character encoding issues
+- Added MIT License
 
-**Features**
+**Features:**
 - Automatic project ID extraction from queue names
 - 3-attempt retry logic with 1-second delays
 - 10-second fetch timeout for reliability
 - Error boundary for graceful error handling
 - Mobile-responsive design
 - Raw JSON toggle for debugging
+- Separate production and example configurations
 
-**Security**
+**Security:**
 - API keys handled server-side only
 - No sensitive data in client code
+- Production configs gitignored
 - CORS-enabled Cloudflare Functions
 - Environment variable configuration
 
@@ -456,5 +501,6 @@ Copyright (c) 2026 CBA Solutions, LLC
 For issues or questions:
 - Check troubleshooting section above
 - Review Cloudflare Functions logs
+- See [PRODUCTION_CONFIG_SETUP.md](PRODUCTION_CONFIG_SETUP.md) for deployment details
 - Contact PolyAI support for API issues
 - Contact Zoom support for SDK issues

@@ -16,6 +16,9 @@ dist/
 .env.*.local
 .dev.vars
 
+# Production configuration (contains real project IDs)
+src/config/projects.prod.ts
+
 # Editor directories
 .vscode/
 .idea/
