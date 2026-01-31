@@ -328,7 +328,7 @@ function App() {
       <footer className="mt-12 border-t border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <p className="text-center text-xs text-gray-500">
-            Â© 2026 CBA Solutions, LLC â€¢ Powered by PolyAI & Zoom
+            &copy; 2026 CBA Solutions, LLC &bull; Powered by PolyAI & Zoom
           </p>
         </div>
       </footer>
